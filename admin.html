@@ -278,13 +278,12 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/fireba
 import { getFirestore, collection, getDocs, query, where, addDoc, doc, updateDoc, deleteDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 /* ============================================================
-   ⚙️ تنظیمات — این‌ها را عوض کنید
+   ⚙️ تنظیمات
    ============================================================ */
 const firebaseConfig = {
   apiKey: "AIzaSyAZGDFqDPvbrejhmBLdIoVmLuGh2yR0Jcs",
   authDomain: "file-panel-1a60a.firebaseapp.com",
   projectId: "file-panel-1a60a",
-  storageBucket: "file-panel-1a60a.firebasestorage.app",
   messagingSenderId: "408149922852",
   appId: "1:408149922852:web:c238cc80fa9c1203c174b1"
 };
@@ -341,7 +340,7 @@ function openModal(title, bodyHTML, onConfirm) {
 }
 window.closeModal = () => { document.getElementById('modalContainer').innerHTML = ''; };
 
-/* ===== Login ===== */
+/* ===== Login (این تابع قبلاً پیدا نمی‌شد) ===== */
 window.adminLogin = function() {
   const u = document.getElementById('adminUser').value.trim();
   const p = document.getElementById('adminPass').value;
@@ -358,6 +357,7 @@ window.adminLogin = function() {
     toast('نام کاربری یا رمز اشتباه است', 'error');
   }
 };
+
 window.adminLogout = function() {
   sessionStorage.removeItem('adminLoggedIn');
   document.getElementById('panelSection').classList.add('hidden');
@@ -536,6 +536,14 @@ window.renderCaseFiles = async function() {
     let html = '';
     if (!files.length) html = '<div class="card-box"><div class="empty">فایلی برای این پرونده نیست</div></div>';
 
+    // اطلاعات گیرنده
+    const receivers = [...new Set(files.map(f => f.receiverInfo).filter(Boolean))];
+    if (receivers.length) {
+      html += `<div class="card-box"><h3><i class="fas fa-user-tag"></i> اطلاعات گیرنده</h3>`;
+      receivers.forEach(r => html += `<div class="desc-item" style="border-right-color: var(--primary); background: linear-gradient(135deg, rgba(99,102,241,.15), rgba(99,102,241,.05));">${r}</div>`);
+      html += `</div>`;
+    }
+
     const icons = {
       'باهم‌های اینویس': 'fa-box-open', 'پکینگ': 'fa-boxes-stacked',
       'سمیر': 'fa-clipboard-list', 'اینویس جایگزین': 'fa-file-invoice', 'پکینگ جایگزین': 'fa-box'
@@ -554,20 +562,17 @@ window.renderCaseFiles = async function() {
       html += `</div>`;
     });
 
-    const receivers = [...new Set(files.map(f => f.receiverInfo).filter(Boolean))];
-    if (receivers.length) {
-      html += `<div class="card-box"><h3><i class="fas fa-user-tag"></i> اطلاعات گیرنده</h3>`;
-      receivers.forEach(r => html += `<div class="desc-item" style="border-right-color: var(--primary); background: linear-gradient(135deg, rgba(99,102,241,.15), rgba(99,102,241,.05));">${r}</div>`);
-      html += `</div>`;
-    }
-
-    // توضیحات
     const descs = [...new Set(files.map(f => f.description).filter(Boolean))];
     if (descs.length) {
       html += `<div class="card-box"><h3><i class="fas fa-comment-dots"></i> توضیحات این پرونده</h3>`;
       descs.forEach(d => html += `<div class="desc-item">${d}</div>`);
       html += `</div>`;
     }
+    content.innerHTML = html;
+  } catch (err) {
+    console.error(err);
+    toast('خطا: ' + err.message, 'error');
+  }
 };
 
 window.editCurrentUser = () => { if (currentUserId) editUser(currentUserId); };
