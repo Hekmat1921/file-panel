@@ -277,9 +277,6 @@ body::after { bottom: -30%; left: -10%; width: 500px; height: 500px; background:
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, collection, getDocs, query, where, addDoc, doc, updateDoc, deleteDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-/* ============================================================
-   ⚙️ تنظیمات
-   ============================================================ */
 const firebaseConfig = {
   apiKey: "AIzaSyAZGDFqDPvbrejhmBLdIoVmLuGh2yR0Jcs",
   authDomain: "file-panel-1a60a.firebaseapp.com",
@@ -290,13 +287,12 @@ const firebaseConfig = {
 
 const ADMIN_USERNAME = "admin";
 const ADMIN_PASSWORD = "1234";
-/* ============================================================ */
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 let currentUserId = null;
 
-/* ===== Theme ===== */
+/* ===== توابع عمومی (باید window باشند تا HTML ببیند) ===== */
 window.toggleTheme = function() {
   const html = document.documentElement;
   const isLight = html.getAttribute('data-theme') === 'light';
@@ -304,43 +300,7 @@ window.toggleTheme = function() {
   document.getElementById('themeIcon').className = isLight ? 'fas fa-moon' : 'fas fa-sun';
   localStorage.setItem('theme', isLight ? 'dark' : 'light');
 };
-(function initTheme() {
-  const t = localStorage.getItem('theme') || 'dark';
-  document.documentElement.setAttribute('data-theme', t);
-  document.getElementById('themeIcon').className = t === 'light' ? 'fas fa-sun' : 'fas fa-moon';
-})();
 
-/* ===== Toast ===== */
-function toast(msg, type='success') {
-  const c = document.getElementById('toastContainer');
-  const el = document.createElement('div');
-  el.className = 'toast ' + type;
-  el.innerHTML = `<i class="fas fa-${type==='success'?'check-circle':'exclamation-circle'}"></i> <span>${msg}</span>`;
-  c.appendChild(el);
-  setTimeout(() => { el.classList.add('out'); setTimeout(()=>el.remove(), 300); }, 3000);
-}
-
-/* ===== Modal ===== */
-function openModal(title, bodyHTML, onConfirm) {
-  const c = document.getElementById('modalContainer');
-  c.innerHTML = `
-    <div class="modal-overlay" onclick="if(event.target===this)closeModal()">
-      <div class="modal">
-        <h3>${title}</h3>
-        <div id="modalBody">${bodyHTML}</div>
-        <div class="modal-actions">
-          <button class="btn ghost" onclick="closeModal()">انصراف</button>
-          <button class="btn" id="modalConfirm">تأیید</button>
-        </div>
-      </div>
-    </div>
-  `;
-  document.getElementById('modalConfirm').onclick = () => { if (onConfirm() !== false) closeModal(); };
-  setTimeout(() => c.querySelector('input, textarea')?.focus(), 100);
-}
-window.closeModal = () => { document.getElementById('modalContainer').innerHTML = ''; };
-
-/* ===== Login (این تابع قبلاً پیدا نمی‌شد) ===== */
 window.adminLogin = function() {
   const u = document.getElementById('adminUser').value.trim();
   const p = document.getElementById('adminPass').value;
@@ -365,7 +325,6 @@ window.adminLogout = function() {
   currentUserId = null;
 };
 
-/* ===== Tabs ===== */
 window.showTab = function(name) {
   document.getElementById('tabUsers').classList.toggle('active', name==='users');
   document.getElementById('tabProfile').classList.toggle('active', name==='profile');
@@ -373,7 +332,51 @@ window.showTab = function(name) {
   document.getElementById('profileSection').classList.toggle('hidden', name!=='profile');
 };
 
-/* ===== Users ===== */
+window.closeModal = () => { document.getElementById('modalContainer').innerHTML = ''; };
+window.editCurrentUser = () => { if (currentUserId) editUser(currentUserId); };
+window.deleteCurrentUser = () => { if (currentUserId) deleteUser(currentUserId); };
+
+/* ===== شروع ===== */
+(function initTheme() {
+  const t = localStorage.getItem('theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', t);
+  const icon = document.getElementById('themeIcon');
+  if (icon) icon.className = t === 'light' ? 'fas fa-sun' : 'fas fa-moon';
+})();
+
+if (sessionStorage.getItem('adminLoggedIn') === '1') {
+  document.getElementById('loginSection').classList.add('hidden');
+  document.getElementById('panelSection').classList.remove('hidden');
+  loadUsers();
+}
+
+/* ===== توابع داخلی ===== */
+function toast(msg, type='success') {
+  const c = document.getElementById('toastContainer');
+  const el = document.createElement('div');
+  el.className = 'toast ' + type;
+  el.innerHTML = `<i class="fas fa-${type==='success'?'check-circle':'exclamation-circle'}"></i> <span>${msg}</span>`;
+  c.appendChild(el);
+  setTimeout(() => { el.classList.add('out'); setTimeout(()=>el.remove(), 300); }, 3000);
+}
+
+function openModal(title, bodyHTML, onConfirm) {
+  const c = document.getElementById('modalContainer');
+  c.innerHTML = `
+    <div class="modal-overlay" onclick="if(event.target===this)closeModal()">
+      <div class="modal">
+        <h3>${title}</h3>
+        <div id="modalBody">${bodyHTML}</div>
+        <div class="modal-actions">
+          <button class="btn ghost" onclick="closeModal()">انصراف</button>
+          <button class="btn" id="modalConfirm">تأیید</button>
+        </div>
+      </div>
+    </div>
+  `;
+  document.getElementById('modalConfirm').onclick = () => { if (onConfirm() !== false) closeModal(); };
+}
+
 async function loadUsers() {
   const list = document.getElementById('usersList');
   list.innerHTML = '<div class="empty"><i class="fas fa-spinner fa-spin"></i>در حال بارگذاری...</div>';
@@ -489,7 +492,6 @@ window.deleteUser = async function(id) {
   });
 };
 
-/* ===== Profile ===== */
 window.openProfile = async function(id) {
   currentUserId = id;
   showTab('profile');
@@ -536,7 +538,6 @@ window.renderCaseFiles = async function() {
     let html = '';
     if (!files.length) html = '<div class="card-box"><div class="empty">فایلی برای این پرونده نیست</div></div>';
 
-    // اطلاعات گیرنده
     const receivers = [...new Set(files.map(f => f.receiverInfo).filter(Boolean))];
     if (receivers.length) {
       html += `<div class="card-box"><h3><i class="fas fa-user-tag"></i> اطلاعات گیرنده</h3>`;
@@ -574,16 +575,6 @@ window.renderCaseFiles = async function() {
     toast('خطا: ' + err.message, 'error');
   }
 };
-
-window.editCurrentUser = () => { if (currentUserId) editUser(currentUserId); };
-window.deleteCurrentUser = () => { if (currentUserId) deleteUser(currentUserId); };
-
-/* ===== Auto-login ===== */
-if (sessionStorage.getItem('adminLoggedIn') === '1') {
-  document.getElementById('loginSection').classList.add('hidden');
-  document.getElementById('panelSection').classList.remove('hidden');
-  loadUsers();
-}
 </script>
 </body>
 </html>
