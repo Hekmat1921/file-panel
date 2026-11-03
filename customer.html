@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>پنل مشتری | ارسال فایل</title>
+<link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+:root {
+  --bg-1: #0f172a;
+  --bg-2: #1e293b;
+  --card: rgba(255,255,255,0.08);
+  --card-border: rgba(255,255,255,0.15);
+  --text: #f1f5f9;
+  --text-muted: #94a3b8;
+  --primary: #6366f1;
+  --primary-2: #8b5cf6;
+  --success: #10b981;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --shadow: 0 20px 60px rgba(0,0,0,0.4);
+}
+[data-theme="light"] {
+  --bg-1: #e0e7ff;
+  --bg-2: #f0f9ff;
+  --card: rgba(255,255,255,0.75);
+  --card-border: rgba(99,102,241,0.15);
+  --text: #1e293b;
+  --text-muted: #64748b;
+  --shadow: 0 20px 60px rgba(99,102,241,0.15);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Vazirmatn', Tahoma, sans-serif;
+  min-height: 100vh;
+  color: var(--text);
+  background: linear-gradient(135deg, var(--bg-1) 0%, var(--bg-2) 100%);
+  background-attachment: fixed;
+  padding: 20px;
+  transition: background 0.4s ease, color 0.4s ease;
+  overflow-x: hidden;
+}
+body::before {
+  content: '';
+  position: fixed;
+  top: -50%; right: -20%;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(99,102,241,0.35), transparent 70%);
+  border-radius: 50%;
+  animation: float 15s ease-in-out infinite;
+  z-index: -1;
+  pointer-events: none;
+}
+body::after {
+  content: '';
+  position: fixed;
+  bottom: -30%; left: -10%;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(139,92,246,0.3), transparent 70%);
+  border-radius: 50%;
+  animation: float 20s ease-in-out infinite reverse;
+  z-index: -1;
+  pointer-events: none;
+}
+@keyframes float {
+  0%,100% { transform: translate(0,0) scale(1); }
+  50% { transform: translate(60px,-40px) scale(1.15); }
+}
+
+/* ===== Theme Toggle ===== */
+.theme-toggle {
+  position: fixed;
+  top: 20px; left: 20px;
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: var(--text);
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  transition: all 0.3s ease;
+}
+.theme-toggle:hover { transform: rotate(180deg) scale(1.1); }
+
+/* ===== Login ===== */
+.login-wrap {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 24px;
+  padding: 40px 32px;
+  box-shadow: var(--shadow);
+  animation: slideUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.login-logo {
+  width: 80px; height: 80px;
+  margin: 0 auto 20px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-2));
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  color: #fff;
+  box-shadow: 0 10px 30px rgba(99,102,241,0.4);
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%,100% { box-shadow: 0 10px 30px rgba(99,102,241,0.4); }
+  50% { box-shadow: 0 10px 40px rgba(139,92,246,0.7); }
+}
+.login-card h2 {
+  text-align: center;
+  margin-bottom: 8px;
+  font-size: 24px;
+  font-weight: 700;
+}
+.login-card p.sub {
+  text-align: center;
+  color: var(--text-muted);
+  margin-bottom: 28px;
+  font-size: 14px;
+}
+
+/* ===== Inputs ===== */
+.field { margin-bottom: 18px; position: relative; }
+.field label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+.field .input-wrap { position: relative; }
+.field i {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 15px;
+  pointer-events: none;
+}
+.field input, .field textarea, .field select {
+  width: 100%;
+  padding: 14px 44px 14px 16px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+[data-theme="light"] .field input,
+[data-theme="light"] .field textarea,
+[data-theme="light"] .field select { background: rgba(255,255,255,0.9); }
+.field input:focus, .field textarea:focus, .field select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(99,102,241,0.15);
+  background: rgba(255,255,255,0.1);
+}
+.field input::placeholder, .field textarea::placeholder { color: var(--text-muted); opacity: 0.6; }
+
+/* ===== Buttons ===== */
+.btn {
+  width: 100%;
+  padding: 15px 24px;
+  border: none;
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+  background: linear-gradient(135deg, var(--primary), var(--primary-2));
+  box-shadow: 0 8px 24px rgba(99,102,241,0.35);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.btn:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(99,102,241,0.5); }
+.btn:active { transform: translateY(0); }
+.btn.btn-sm { width: auto; padding: 10px 18px; font-size: 13px; }
+.btn.ghost {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid var(--card-border);
+  box-shadow: none;
+  color: var(--text);
+}
+.btn.ghost:hover { background: rgba(255,255,255,0.15); }
+.btn.danger { background: linear-gradient(135deg, #ef4444, #dc2626); box-shadow: 0 8px 24px rgba(239,68,68,0.35); }
+
+/* ===== Panel ===== */
+.panel-wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px 20px 60px;
+  animation: fadeIn 0.6s ease;
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 24px;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 20px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow);
+}
+.topbar .user-info {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.avatar {
+  width: 46px; height: 46px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 700;
+  font-size: 18px;
+}
+.topbar .user-info .name { font-weight: 700; font-size: 15px; }
+.topbar .user-info .role { font-size: 12px; color: var(--text-muted); }
+
+.page-title {
+  text-align: center;
+  margin-bottom: 8px;
+  font-size: 28px;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--primary), var(--primary-2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.page-sub {
+  text-align: center;
+  color: var(--text-muted);
+  margin-bottom: 28px;
+  font-size: 14px;
+}
+
+/* ===== Cards ===== */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.file-card {
+  position: relative;
+  background: var(--card);
+  border: 2px solid var(--card-border);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 18px;
+  padding: 22px 18px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  overflow: hidden;
+}
+.file-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(139,92,246,0.15));
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.file-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--primary);
+  box-shadow: 0 20px 40px rgba(99,102,241,0.25);
+}
+.file-card:hover::before { opacity: 1; }
+.file-card.active {
+  border-color: var(--success);
+  background: linear-gradient(135deg, rgba(16,185,129,0.15), rgba(16,185,129,0.05));
+  box-shadow: 0 20px 40px rgba(16,185,129,0.3);
+}
+.file-card.active::before { opacity: 0; }
+.file-card .icon {
+  width: 54px; height: 54px;
+  margin: 0 auto 12px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: #fff;
+  position: relative;
+  transition: all 0.3s;
+}
+.file-card.active .icon { background: linear-gradient(135deg, #10b981, #059669); }
+.file-card h4 {
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  position: relative;
+}
+.file-card input[type=file] {
+  position: relative;
+  width: 100%;
+  font-size: 11px;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+.file-card input[type=file]::file-selector-button {
+  display: none;
+}
+.file-card .drop-hint {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 6px;
+}
+.file-card .file-name {
+  font-size: 11px;
+  color: var(--success);
+  margin-top: 8px;
+  font-weight: 600;
+  word-break: break-all;
+  min-height: 14px;
+  position: relative;
+}
+
+/* ===== Form Section ===== */
+.form-section {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+}
+
+/* ===== Toast ===== */
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 999;
+}
+.toast {
+  padding: 14px 22px;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  backdrop-filter: blur(20px);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  color: var(--text);
+  font-weight: 600;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: toastIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  min-width: 260px;
+}
+.toast.success { border-color: var(--success); }
+.toast.success i { color: var(--success); }
+.toast.error { border-color: var(--danger); }
+.toast.error i { color: var(--danger); }
+@keyframes toastIn {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.toast.out { animation: toastOut 0.3s ease forwards; }
+@keyframes toastOut {
+  to { opacity: 0; transform: translateY(30px); }
+}
+
+.hidden { display: none !important; }
+@media (max-width: 600px) {
+  .page-title { font-size: 22px; }
+  .topbar { padding: 14px 16px; }
+  .cards-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+}
+</style>
+</head>
+<body>
+
+<button class="theme-toggle" onclick="toggleTheme()" title="تغییر تم">
+  <i class="fas fa-moon" id="themeIcon"></i>
+</button>
+
+<!-- ===== Login ===== -->
+<div id="loginSection" class="login-wrap">
+  <div class="login-card">
+    <div class="login-logo"><i class="fas fa-user-shield"></i></div>
+    <h2>ورود مشتری</h2>
+    <p class="sub">برای ارسال فایل، وارد حساب خود شوید</p>
+
+    <div class="field">
+      <label>نام کاربری</label>
+      <div class="input-wrap">
+        <input type="text" id="loginUser" placeholder="نام کاربری خود را وارد کنید">
+        <i class="fas fa-user"></i>
+      </div>
+    </div>
+    <div class="field">
+      <label>رمز عبور</label>
+      <div class="input-wrap">
+        <input type="password" id="loginPass" placeholder="رمز عبور" onkeydown="if(event.key==='Enter')login()">
+        <i class="fas fa-lock"></i>
+      </div>
+    </div>
+    <button class="btn" onclick="login()"><i class="fas fa-sign-in-alt"></i> ورود</button>
+  </div>
+</div>
+
+<!-- ===== Panel ===== -->
+<div id="panelSection" class="panel-wrap hidden">
+  <div class="topbar">
+    <div class="user-info">
+      <div class="avatar" id="avatarInitial">م</div>
+      <div>
+        <div class="name" id="whoami">کاربر</div>
+        <div class="role">مشتری</div>
+      </div>
+    </div>
+    <button class="btn btn-sm ghost" onclick="logout()"><i class="fas fa-sign-out-alt"></i> خروج</button>
+  </div>
+
+  <h1 class="page-title">ارسال فایل به مدیر</h1>
+  <p class="page-sub">نوع فایل را انتخاب کنید، فایل را بچسبانید و شماره پرونده را وارد کنید</p>
+
+  <div class="cards-grid" id="cards">
+    <div class="file-card" data-type="باهم‌های اینویس">
+      <div class="icon"><i class="fas fa-box-open"></i></div>
+      <h4>باهم‌های اینویس</h4>
+      <div class="drop-hint">فایل را بکشید اینجا</div>
+      <div class="file-name"></div>
+      <input type="file" multiple hidden>
+    </div>
+    <div class="file-card" data-type="پکینگ">
+      <div class="icon"><i class="fas fa-boxes-stacked"></i></div>
+      <h4>پکینگ</h4>
+      <div class="drop-hint">فایل را بکشید اینجا</div>
+      <div class="file-name"></div>
+      <input type="file" multiple hidden>
+    </div>
+    <div class="file-card" data-type="سمیر">
+      <div class="icon"><i class="fas fa-clipboard-list"></i></div>
+      <h4>سمیر</h4>
+      <div class="drop-hint">فایل را بکشید اینجا</div>
+      <div class="file-name"></div>
+      <input type="file" multiple hidden>
+    </div>
+    <div class="file-card" data-type="اینویس جایگزین">
+      <div class="icon"><i class="fas fa-file-invoice"></i></div>
+      <h4>اینویس جایگزین</h4>
+      <div class="drop-hint">فایل را بکشید اینجا</div>
+      <div class="file-name"></div>
+      <input type="file" multiple hidden>
+    </div>
+    <div class="file-card" data-type="پکینگ جایگزین">
+      <div class="icon"><i class="fas fa-box"></i></div>
+      <h4>پکینگ جایگزین</h4>
+      <div class="drop-hint">فایل را بکشید اینجا</div>
+      <div class="file-name"></div>
+      <input type="file" multiple hidden>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <div class="field">
+      <label><i class="fas fa-hashtag" style="margin-left:6px;"></i> شماره پرونده</label>
+      <div class="input-wrap">
+        <input type="number" id="caseNumber" min="1" placeholder="مثلاً 1">
+        <i class="fas fa-hashtag"></i>
+      </div>
+    </div>
+    <div class="field">
+      <label><i class="fas fa-comment-dots" style="margin-left:6px;"></i> توضیحات (فقط برای همین پرونده)</label>
+      <div class="input-wrap">
+        <textarea id="desc" rows="3" placeholder="توضیحات اختیاری..."></textarea>
+      </div>
+    </div>
+    <button class="btn" onclick="sendAll()"><i class="fas fa-paper-plane"></i> ارسال به مدیر</button>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+let loggedUser = null;
+let selectedFiles = [];
+
+/* ===== Theme ===== */
+function toggleTheme() {
+  const html = document.documentElement;
+  const isLight = html.getAttribute('data-theme') === 'light';
+  html.setAttribute('data-theme', isLight ? 'dark' : 'light');
+  document.getElementById('themeIcon').className = isLight ? 'fas fa-moon' : 'fas fa-sun';
+  localStorage.setItem('theme', isLight ? 'dark' : 'light');
+}
+(function initTheme() {
+  const t = localStorage.getItem('theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', t);
+  document.getElementById('themeIcon').className = t === 'light' ? 'fas fa-sun' : 'fas fa-moon';
+})();
+
+/* ===== Toast ===== */
+function toast(msg, type='success') {
+  const c = document.getElementById('toastContainer');
+  const el = document.createElement('div');
+  el.className = 'toast ' + type;
+  el.innerHTML = `<i class="fas fa-${type==='success'?'check-circle':'exclamation-circle'}"></i> <span>${msg}</span>`;
+  c.appendChild(el);
+  setTimeout(() => { el.classList.add('out'); setTimeout(()=>el.remove(), 300); }, 3000);
+}
+
+/* ===== DB ===== */
+function openDB() {
+  return new Promise((res, rej) => {
+    const req = indexedDB.open('fileDB', 2);
+    req.onupgradeneeded = e => {
+      const db = e.target.result;
+      if (!db.objectStoreNames.contains('users')) db.createObjectStore('users', { keyPath: 'id', autoIncrement: true });
+      if (!db.objectStoreNames.contains('files')) db.createObjectStore('files', { keyPath: 'id', autoIncrement: true });
+    };
+    req.onsuccess = e => res(e.target.result);
+    req.onerror = e => rej(e.target.error);
+  });
+}
+
+/* ===== Login ===== */
+async function login() {
+  const username = document.getElementById('loginUser').value.trim();
+  const password = document.getElementById('loginPass').value;
+  if (!username || !password) { toast('نام کاربری و رمز را وارد کنید', 'error'); return; }
+
+  const db = await openDB();
+  const tx = db.transaction('users', 'readonly');
+  const req = tx.objectStore('users').getAll();
+  req.onsuccess = () => {
+    const user = req.result.find(u => u.username === username && u.password === password);
+    if (!user) { toast('نام کاربری یا رمز اشتباه است', 'error'); return; }
+
+    loggedUser = user;
+    document.getElementById('whoami').textContent = user.name;
+    document.getElementById('avatarInitial').textContent = user.name.charAt(0);
+    document.getElementById('loginSection').classList.add('hidden');
+    document.getElementById('panelSection').classList.remove('hidden');
+    document.getElementById('loginUser').value = '';
+    document.getElementById('loginPass').value = '';
+    toast('خوش آمدید ' + user.name);
+  };
+}
+function logout() {
+  loggedUser = null;
+  selectedFiles = [];
+  document.getElementById('panelSection').classList.add('hidden');
+  document.getElementById('loginSection').classList.remove('hidden');
+}
+
+/* ===== File Cards ===== */
+document.querySelectorAll('.file-card').forEach(card => {
+  const input = card.querySelector('input[type=file]');
+  const nameEl = card.querySelector('.file-name');
+
+  card.addEventListener('click', e => {
+    if (e.target.tagName !== 'INPUT') input.click();
+  });
+
+  input.addEventListener('change', () => {
+    const files = [...input.files];
+    document.querySelectorAll('.file-card').forEach(c => c.classList.remove('active'));
+    card.classList.add('active');
+    selectedFiles = files;
+    nameEl.textContent = files.length ? `✅ ${files.length} فایل انتخاب شد` : '';
+  });
+
+  // Drag & drop
+  card.addEventListener('dragover', e => { e.preventDefault(); card.style.borderColor = 'var(--success)'; });
+  card.addEventListener('dragleave', () => { card.style.borderColor = ''; });
+  card.addEventListener('drop', e => {
+    e.preventDefault();
+    card.style.borderColor = '';
+    if (!e.dataTransfer.files.length) return;
+    input.files = e.dataTransfer.files;
+    input.dispatchEvent(new Event('change'));
+  });
+});
+
+/* ===== Send ===== */
+async function sendAll() {
+  if (!loggedUser) return;
+  const caseNo = document.getElementById('caseNumber').value.trim();
+  const desc = document.getElementById('desc').value.trim();
+  const activeCard = document.querySelector('.file-card.active');
+
+  if (!caseNo) { toast('شماره پرونده را وارد کنید!', 'error'); return; }
+  if (!activeCard || !selectedFiles.length) { toast('ابتدا یک کارت و فایل انتخاب کنید!', 'error'); return; }
+
+  const db = await openDB();
+  const tx = db.transaction('files', 'readwrite');
+  const store = tx.objectStore('files');
+  const type = activeCard.dataset.type;
+
+  for (const file of selectedFiles) {
+    store.add({
+      userId: loggedUser.id,
+      caseNumber: Number(caseNo),
+      type,
+      fileName: file.name,
+      fileSize: file.size,
+      description: desc,
+      fileBlob: file,
+      date: new Date().toLocaleString('fa-IR')
+    });
+  }
+
+  tx.oncomplete = () => {
+    toast(`✅ ${selectedFiles.length} فایل با شماره پرونده ${caseNo} ارسال شد`, 'success');
+    selectedFiles = [];
+    activeCard.classList.remove('active');
+    activeCard.querySelector('.file-name').textContent = '';
+    activeCard.querySelector('input[type=file]').value = '';
+    document.getElementById('desc').value = '';
+  };
+}
+</script>
+</body>
+</html>
