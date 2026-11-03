@@ -245,7 +245,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/fireba
 import { getFirestore, collection, query, where, getDocs, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 /* ============================================================
-   ⚙️ تنظیمات
+   ⚙️ تنظیمات — این بخش را با دقت چک کنید
    ============================================================ */
 const firebaseConfig = {
   apiKey: "AIzaSyAZGDFqDPvbrejhmBLdIoVmLuGh2yR0Jcs",
@@ -255,8 +255,8 @@ const firebaseConfig = {
   appId: "1:408149922852:web:c238cc80fa9c1203c174b1"
 };
 
-const CLOUDINARY_CLOUD_NAME = "kvhlzdkn5giexxtqhyq2t7ywpayc"; 
-const CLOUDINARY_UPLOAD_PRESET = "ml_default"; // اگر اسم دیگه‌ای ساختید، اینجا عوض کنید
+const CLOUDINARY_CLOUD_NAME = "kvhlzdkn5giexxtqhyq2t7ywpayc";
+const CLOUDINARY_UPLOAD_PRESET = "ml_default";
 /* ============================================================ */
 
 const app = initializeApp(firebaseConfig);
@@ -351,15 +351,15 @@ document.querySelectorAll('.file-card').forEach(card => {
   });
 });
 
-/* ===== Send (با Cloudinary) ===== */
+/* ===== Send (با Cloudinary + اطلاعات گیرنده) ===== */
 window.sendAll = async function() {
   if (!loggedUser) return;
   const caseNo = document.getElementById('caseNumber').value.trim();
   const desc = document.getElementById('desc').value.trim();
-  const receiverInfo = document.getElementById('receiverInfo').value.trim(); // ← جدید
+  const receiverInfo = document.getElementById('receiverInfo').value.trim();
   const activeCard = document.querySelector('.file-card.active');
 
-  if (!receiverInfo) { toast('اطلاعات گیرنده را وارد کنید!', 'error'); return; } // ← جدید
+  if (!receiverInfo) { toast('اطلاعات گیرنده را وارد کنید!', 'error'); return; }
   if (!caseNo) { toast('شماره پرونده را وارد کنید!', 'error'); return; }
   if (!activeCard || !selectedFiles.length) { toast('ابتدا یک کارت و فایل انتخاب کنید!', 'error'); return; }
 
@@ -401,7 +401,7 @@ window.sendAll = async function() {
         fileURL: data.secure_url,
         publicId: data.public_id,
         description: desc,
-        receiverInfo: receiverInfo, // ← جدید
+        receiverInfo: receiverInfo,
         date: new Date().toLocaleString('fa-IR'),
         createdAt: Date.now()
       });
@@ -414,7 +414,7 @@ window.sendAll = async function() {
     activeCard.querySelector('.file-name').textContent = '';
     activeCard.querySelector('input[type=file]').value = '';
     document.getElementById('desc').value = '';
-    document.getElementById('receiverInfo').value = ''; // ← جدید
+    document.getElementById('receiverInfo').value = '';
   } catch (err) {
     console.error('SEND ERROR:', err);
     toast('خطا: ' + err.message, 'error');
