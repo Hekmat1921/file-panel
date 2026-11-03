@@ -554,17 +554,20 @@ window.renderCaseFiles = async function() {
       html += `</div>`;
     });
 
+    const receivers = [...new Set(files.map(f => f.receiverInfo).filter(Boolean))];
+    if (receivers.length) {
+      html += `<div class="card-box"><h3><i class="fas fa-user-tag"></i> اطلاعات گیرنده</h3>`;
+      receivers.forEach(r => html += `<div class="desc-item" style="border-right-color: var(--primary); background: linear-gradient(135deg, rgba(99,102,241,.15), rgba(99,102,241,.05));">${r}</div>`);
+      html += `</div>`;
+    }
+
+    // توضیحات
     const descs = [...new Set(files.map(f => f.description).filter(Boolean))];
     if (descs.length) {
       html += `<div class="card-box"><h3><i class="fas fa-comment-dots"></i> توضیحات این پرونده</h3>`;
       descs.forEach(d => html += `<div class="desc-item">${d}</div>`);
       html += `</div>`;
     }
-    content.innerHTML = html;
-  } catch (err) {
-    console.error(err);
-    toast('خطا: ' + err.message, 'error');
-  }
 };
 
 window.editCurrentUser = () => { if (currentUserId) editUser(currentUserId); };
