@@ -215,6 +215,12 @@ body::after { bottom: -30%; left: -10%; width: 500px; height: 500px; background:
 
   <div class="form-section">
     <div class="field">
+      <label><i class="fas fa-user-tag" style="margin-left:6px;"></i> اطلاعات گیرنده <span style="color:var(--danger);">*</span></label>
+      <div class="input-wrap">
+        <input type="text" id="receiverInfo" placeholder="نام گیرنده، شرکت، شماره تماس...">
+        <i class="fas fa-user-tag"></i>
+      </div>
+    </div>
       <label><i class="fas fa-hashtag" style="margin-left:6px;"></i> شماره پرونده</label>
       <div class="input-wrap">
         <input type="number" id="caseNumber" min="1" placeholder="مثلاً 1">
@@ -350,8 +356,10 @@ window.sendAll = async function() {
   if (!loggedUser) return;
   const caseNo = document.getElementById('caseNumber').value.trim();
   const desc = document.getElementById('desc').value.trim();
+  const receiverInfo = document.getElementById('receiverInfo').value.trim(); // ← جدید
   const activeCard = document.querySelector('.file-card.active');
 
+  if (!receiverInfo) { toast('اطلاعات گیرنده را وارد کنید!', 'error'); return; } // ← جدید
   if (!caseNo) { toast('شماره پرونده را وارد کنید!', 'error'); return; }
   if (!activeCard || !selectedFiles.length) { toast('ابتدا یک کارت و فایل انتخاب کنید!', 'error'); return; }
 
@@ -393,6 +401,7 @@ window.sendAll = async function() {
         fileURL: data.secure_url,
         publicId: data.public_id,
         description: desc,
+        receiverInfo: receiverInfo, // ← جدید
         date: new Date().toLocaleString('fa-IR'),
         createdAt: Date.now()
       });
@@ -405,6 +414,7 @@ window.sendAll = async function() {
     activeCard.querySelector('.file-name').textContent = '';
     activeCard.querySelector('input[type=file]').value = '';
     document.getElementById('desc').value = '';
+    document.getElementById('receiverInfo').value = ''; // ← جدید
   } catch (err) {
     console.error('SEND ERROR:', err);
     toast('خطا: ' + err.message, 'error');
