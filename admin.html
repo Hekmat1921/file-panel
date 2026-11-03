@@ -8,404 +8,173 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
 :root {
-  --bg-1: #0f172a;
-  --bg-2: #1e293b;
-  --card: rgba(255,255,255,0.08);
-  --card-border: rgba(255,255,255,0.15);
-  --text: #f1f5f9;
-  --text-muted: #94a3b8;
-  --primary: #6366f1;
-  --primary-2: #8b5cf6;
-  --success: #10b981;
-  --danger: #ef4444;
-  --warning: #f59e0b;
+  --bg-1: #0f172a; --bg-2: #1e293b;
+  --card: rgba(255,255,255,0.08); --card-border: rgba(255,255,255,0.15);
+  --text: #f1f5f9; --text-muted: #94a3b8;
+  --primary: #6366f1; --primary-2: #8b5cf6;
+  --success: #10b981; --danger: #ef4444; --warning: #f59e0b;
   --shadow: 0 20px 60px rgba(0,0,0,0.4);
 }
 [data-theme="light"] {
-  --bg-1: #e0e7ff;
-  --bg-2: #f0f9ff;
-  --card: rgba(255,255,255,0.75);
-  --card-border: rgba(99,102,241,0.15);
-  --text: #1e293b;
-  --text-muted: #64748b;
+  --bg-1: #e0e7ff; --bg-2: #f0f9ff;
+  --card: rgba(255,255,255,0.75); --card-border: rgba(99,102,241,0.15);
+  --text: #1e293b; --text-muted: #64748b;
   --shadow: 0 20px 60px rgba(99,102,241,0.15);
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
-  font-family: 'Vazirmatn', Tahoma, sans-serif;
-  min-height: 100vh;
-  color: var(--text);
+  font-family: 'Vazirmatn', Tahoma, sans-serif; min-height: 100vh; color: var(--text);
   background: linear-gradient(135deg, var(--bg-1) 0%, var(--bg-2) 100%);
-  background-attachment: fixed;
-  padding: 20px;
-  transition: background 0.4s ease, color 0.4s ease;
-  overflow-x: hidden;
+  background-attachment: fixed; padding: 20px; transition: background .4s, color .4s; overflow-x: hidden;
 }
-body::before {
-  content: '';
-  position: fixed;
-  top: -50%; right: -20%;
-  width: 600px; height: 600px;
-  background: radial-gradient(circle, rgba(99,102,241,0.35), transparent 70%);
-  border-radius: 50%;
-  animation: float 15s ease-in-out infinite;
-  z-index: -1;
-  pointer-events: none;
-}
-body::after {
-  content: '';
-  position: fixed;
-  bottom: -30%; left: -10%;
-  width: 500px; height: 500px;
-  background: radial-gradient(circle, rgba(139,92,246,0.3), transparent 70%);
-  border-radius: 50%;
-  animation: float 20s ease-in-out infinite reverse;
-  z-index: -1;
-  pointer-events: none;
-}
-@keyframes float {
-  0%,100% { transform: translate(0,0) scale(1); }
-  50% { transform: translate(60px,-40px) scale(1.15); }
-}
-
+body::before, body::after { content: ''; position: fixed; width: 600px; height: 600px; border-radius: 50%; z-index: -1; pointer-events: none; }
+body::before { top: -50%; right: -20%; background: radial-gradient(circle, rgba(99,102,241,.35), transparent 70%); animation: float 15s ease-in-out infinite; }
+body::after { bottom: -30%; left: -10%; width: 500px; height: 500px; background: radial-gradient(circle, rgba(139,92,246,.3), transparent 70%); animation: float 20s ease-in-out infinite reverse; }
+@keyframes float { 0%,100% { transform: translate(0,0) scale(1);} 50% { transform: translate(60px,-40px) scale(1.15);} }
 .theme-toggle {
-  position: fixed;
-  top: 20px; left: 20px;
-  width: 48px; height: 48px;
-  border-radius: 50%;
-  background: var(--card);
-  border: 1px solid var(--card-border);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  color: var(--text);
-  cursor: pointer;
-  font-size: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 100;
-  transition: all 0.3s ease;
+  position: fixed; top: 20px; left: 20px; width: 48px; height: 48px; border-radius: 50%;
+  background: var(--card); border: 1px solid var(--card-border); backdrop-filter: blur(12px);
+  color: var(--text); cursor: pointer; font-size: 18px;
+  display: flex; align-items: center; justify-content: center; z-index: 100; transition: all .3s;
 }
 .theme-toggle:hover { transform: rotate(180deg) scale(1.1); }
-
-/* ===== Login ===== */
-.login-wrap {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-}
+.login-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
 .login-card {
-  width: 100%;
-  max-width: 420px;
-  background: var(--card);
-  border: 1px solid var(--card-border);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-radius: 24px;
-  padding: 40px 32px;
-  box-shadow: var(--shadow);
-  animation: slideUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  width: 100%; max-width: 420px; background: var(--card); border: 1px solid var(--card-border);
+  backdrop-filter: blur(20px); border-radius: 24px; padding: 40px 32px;
+  box-shadow: var(--shadow); animation: slideUp .6s cubic-bezier(.34,1.56,.64,1);
 }
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(40px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+@keyframes slideUp { from { opacity: 0; transform: translateY(40px);} to { opacity: 1; transform: translateY(0);} }
 .login-logo {
-  width: 80px; height: 80px;
-  margin: 0 auto 20px;
+  width: 80px; height: 80px; margin: 0 auto 20px;
   background: linear-gradient(135deg, var(--primary), var(--primary-2));
-  border-radius: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 36px;
-  color: #fff;
-  box-shadow: 0 10px 30px rgba(99,102,241,0.4);
+  border-radius: 24px; display: flex; align-items: center; justify-content: center;
+  font-size: 36px; color: #fff; box-shadow: 0 10px 30px rgba(99,102,241,.4);
   animation: pulse 2s ease-in-out infinite;
 }
-@keyframes pulse {
-  0%,100% { box-shadow: 0 10px 30px rgba(99,102,241,0.4); }
-  50% { box-shadow: 0 10px 40px rgba(139,92,246,0.7); }
-}
-.login-card h2 { text-align: center; margin-bottom: 8px; font-size: 24px; font-weight: 700; }
+@keyframes pulse { 0%,100% { box-shadow: 0 10px 30px rgba(99,102,241,.4);} 50% { box-shadow: 0 10px 40px rgba(139,92,246,.7);} }
+.login-card h2 { text-align: center; margin-bottom: 8px; font-size: 24px; }
 .login-card p.sub { text-align: center; color: var(--text-muted); margin-bottom: 28px; font-size: 14px; }
-
 .field { margin-bottom: 18px; position: relative; }
 .field label { display: block; margin-bottom: 8px; font-size: 13px; font-weight: 600; color: var(--text-muted); }
 .field .input-wrap { position: relative; }
 .field i { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 15px; pointer-events: none; }
 .field input, .field textarea, .field select {
-  width: 100%;
-  padding: 14px 44px 14px 16px;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid var(--card-border);
-  border-radius: 12px;
-  color: var(--text);
-  font-family: inherit;
-  font-size: 14px;
-  transition: all 0.3s ease;
+  width: 100%; padding: 14px 44px 14px 16px; background: rgba(255,255,255,.06);
+  border: 1px solid var(--card-border); border-radius: 12px; color: var(--text);
+  font-family: inherit; font-size: 14px; transition: all .3s;
 }
-[data-theme="light"] .field input,
-[data-theme="light"] .field textarea,
-[data-theme="light"] .field select { background: rgba(255,255,255,0.9); }
+[data-theme="light"] .field input, [data-theme="light"] .field textarea, [data-theme="light"] .field select { background: rgba(255,255,255,.9); }
 .field input:focus, .field textarea:focus, .field select:focus {
-  outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 4px rgba(99,102,241,0.15);
-  background: rgba(255,255,255,0.1);
+  outline: none; border-color: var(--primary); box-shadow: 0 0 0 4px rgba(99,102,241,.15); background: rgba(255,255,255,.1);
 }
-.field input::placeholder, .field textarea::placeholder { color: var(--text-muted); opacity: 0.6; }
-
 .btn {
-  padding: 13px 22px;
-  border: none;
-  border-radius: 12px;
-  font-family: inherit;
-  font-size: 14px;
-  font-weight: 700;
-  color: #fff;
-  cursor: pointer;
+  padding: 13px 22px; border: none; border-radius: 12px; font-family: inherit;
+  font-size: 14px; font-weight: 700; color: #fff; cursor: pointer;
   background: linear-gradient(135deg, var(--primary), var(--primary-2));
-  box-shadow: 0 8px 24px rgba(99,102,241,0.35);
-  transition: all 0.3s ease;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
+  box-shadow: 0 8px 24px rgba(99,102,241,.35); transition: all .3s;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
 }
-.btn:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(99,102,241,0.5); }
-.btn:active { transform: translateY(0); }
+.btn:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(99,102,241,.5); }
+.btn:disabled { opacity: .6; cursor: not-allowed; transform: none; }
 .btn.block { width: 100%; }
-.btn.ghost { background: rgba(255,255,255,0.08); border: 1px solid var(--card-border); box-shadow: none; color: var(--text); }
-.btn.ghost:hover { background: rgba(255,255,255,0.15); }
-.btn.danger { background: linear-gradient(135deg, #ef4444, #dc2626); box-shadow: 0 8px 24px rgba(239,68,68,0.35); }
+.btn.ghost { background: rgba(255,255,255,.08); border: 1px solid var(--card-border); box-shadow: none; color: var(--text); }
+.btn.ghost:hover { background: rgba(255,255,255,.15); }
+.btn.danger { background: linear-gradient(135deg, #ef4444, #dc2626); box-shadow: 0 8px 24px rgba(239,68,68,.35); }
 .btn.sm { padding: 8px 14px; font-size: 12px; }
 .btn.icon-only { padding: 8px 10px; }
-
-/* ===== Panel ===== */
-.panel-wrap { max-width: 1100px; margin: 0 auto; padding: 20px 20px 60px; animation: fadeIn 0.6s ease; }
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.panel-wrap { max-width: 1100px; margin: 0 auto; padding: 20px 20px 60px; animation: fadeIn .6s; }
+@keyframes fadeIn { from { opacity: 0;} to { opacity: 1;} }
 .topbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 18px 24px;
-  background: var(--card);
-  border: 1px solid var(--card-border);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-radius: 20px;
-  margin-bottom: 24px;
-  box-shadow: var(--shadow);
+  display: flex; justify-content: space-between; align-items: center; padding: 18px 24px;
+  background: var(--card); border: 1px solid var(--card-border); backdrop-filter: blur(20px);
+  border-radius: 20px; margin-bottom: 24px; box-shadow: var(--shadow);
 }
 .topbar .user-info { display: flex; align-items: center; gap: 14px; }
 .avatar {
-  width: 46px; height: 46px;
-  border-radius: 14px;
+  width: 46px; height: 46px; border-radius: 14px;
   background: linear-gradient(135deg, var(--primary), var(--primary-2));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  font-weight: 700;
-  font-size: 18px;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-weight: 700; font-size: 18px;
 }
 .topbar .user-info .name { font-weight: 700; font-size: 15px; }
 .topbar .user-info .role { font-size: 12px; color: var(--text-muted); }
-
-.tabs {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
-  background: var(--card);
-  padding: 8px;
-  border-radius: 16px;
-  border: 1px solid var(--card-border);
-  backdrop-filter: blur(20px);
-}
+.tabs { display: flex; gap: 10px; margin-bottom: 20px; background: var(--card); padding: 8px; border-radius: 16px; border: 1px solid var(--card-border); backdrop-filter: blur(20px); }
 .tab {
-  flex: 1;
-  padding: 12px 20px;
-  border: none;
-  background: transparent;
-  color: var(--text-muted);
-  font-family: inherit;
-  font-size: 14px;
-  font-weight: 700;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: all 0.3s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
+  flex: 1; padding: 12px 20px; border: none; background: transparent;
+  color: var(--text-muted); font-family: inherit; font-size: 14px; font-weight: 700;
+  border-radius: 10px; cursor: pointer; transition: all .3s;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
 }
 .tab.active {
   background: linear-gradient(135deg, var(--primary), var(--primary-2));
-  color: #fff;
-  box-shadow: 0 6px 20px rgba(99,102,241,0.4);
+  color: #fff; box-shadow: 0 6px 20px rgba(99,102,241,.4);
 }
-
 .card-box {
-  background: var(--card);
-  border: 1px solid var(--card-border);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-radius: 20px;
-  padding: 24px;
-  margin-bottom: 20px;
-  box-shadow: var(--shadow);
+  background: var(--card); border: 1px solid var(--card-border); backdrop-filter: blur(20px);
+  border-radius: 20px; padding: 24px; margin-bottom: 20px; box-shadow: var(--shadow);
 }
-.card-box h3 {
-  margin-bottom: 18px;
-  font-size: 17px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
+.card-box h3 { margin-bottom: 18px; font-size: 17px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
 .card-box h3 i { color: var(--primary); }
-
 .user-card {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 18px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid var(--card-border);
-  border-radius: 14px;
-  margin-bottom: 10px;
-  transition: all 0.3s;
-  cursor: pointer;
+  display: flex; justify-content: space-between; align-items: center; padding: 16px 18px;
+  background: rgba(255,255,255,.04); border: 1px solid var(--card-border); border-radius: 14px;
+  margin-bottom: 10px; transition: all .3s; cursor: pointer;
 }
-.user-card:hover {
-  background: rgba(99,102,241,0.1);
-  border-color: var(--primary);
-  transform: translateX(-4px);
-}
+.user-card:hover { background: rgba(99,102,241,.1); border-color: var(--primary); transform: translateX(-4px); }
 .user-card .user-left { display: flex; align-items: center; gap: 14px; }
 .user-card .avatar-sm {
-  width: 42px; height: 42px;
-  border-radius: 12px;
+  width: 42px; height: 42px; border-radius: 12px;
   background: linear-gradient(135deg, var(--primary), var(--primary-2));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  font-weight: 700;
-  font-size: 16px;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-weight: 700; font-size: 16px;
 }
 .user-card .name { font-weight: 700; font-size: 14px; }
 .user-card .meta { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
 .user-card .actions { display: flex; gap: 6px; }
-
-.empty {
-  text-align: center;
-  color: var(--text-muted);
-  padding: 50px 20px;
-  font-size: 14px;
-}
-.empty i { font-size: 48px; opacity: 0.3; display: block; margin-bottom: 14px; }
-
-/* ===== Modal ===== */
+.empty { text-align: center; color: var(--text-muted); padding: 50px 20px; font-size: 14px; }
+.empty i { font-size: 48px; opacity: .3; display: block; margin-bottom: 14px; }
 .modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.6);
-  backdrop-filter: blur(6px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 500;
-  padding: 20px;
-  animation: fadeIn 0.3s ease;
+  position: fixed; inset: 0; background: rgba(0,0,0,.6); backdrop-filter: blur(6px);
+  display: flex; align-items: center; justify-content: center; z-index: 500; padding: 20px;
+  animation: fadeIn .3s;
 }
 .modal {
-  width: 100%;
-  max-width: 440px;
-  background: var(--card);
-  border: 1px solid var(--card-border);
-  backdrop-filter: blur(30px);
-  border-radius: 24px;
-  padding: 30px;
-  box-shadow: var(--shadow);
-  animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  max-height: 90vh;
-  overflow-y: auto;
+  width: 100%; max-width: 440px; background: var(--card); border: 1px solid var(--card-border);
+  backdrop-filter: blur(30px); border-radius: 24px; padding: 30px; box-shadow: var(--shadow);
+  animation: slideUp .4s cubic-bezier(.34,1.56,.64,1); max-height: 90vh; overflow-y: auto;
 }
 .modal h3 { margin-bottom: 20px; font-size: 20px; }
 .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
 .modal-actions .btn { flex: 1; }
-
-/* ===== File Item ===== */
 .file-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 16px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid var(--card-border);
-  border-radius: 12px;
-  margin-bottom: 8px;
-  transition: all 0.2s;
+  display: flex; justify-content: space-between; align-items: center; padding: 12px 16px;
+  background: rgba(255,255,255,.04); border: 1px solid var(--card-border); border-radius: 12px;
+  margin-bottom: 8px; transition: all .2s;
 }
-.file-item:hover { background: rgba(255,255,255,0.08); }
+.file-item:hover { background: rgba(255,255,255,.08); }
 .file-item .file-name { font-size: 13px; font-weight: 600; word-break: break-all; }
 .file-item .file-meta { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
-.file-item a {
-  color: var(--success);
-  font-size: 18px;
-  text-decoration: none;
-  transition: transform 0.2s;
-}
+.file-item a { color: var(--success); font-size: 18px; text-decoration: none; transition: transform .2s; }
 .file-item a:hover { transform: scale(1.2); }
-
 .desc-item {
-  background: linear-gradient(135deg, rgba(245,158,11,0.15), rgba(245,158,11,0.05));
-  border-right: 4px solid var(--warning);
-  padding: 12px 16px;
-  border-radius: 10px;
-  font-size: 13px;
-  margin-bottom: 8px;
-  line-height: 1.7;
+  background: linear-gradient(135deg, rgba(245,158,11,.15), rgba(245,158,11,.05));
+  border-right: 4px solid var(--warning); padding: 12px 16px; border-radius: 10px;
+  font-size: 13px; margin-bottom: 8px; line-height: 1.7;
 }
-
-.toast-container {
-  position: fixed;
-  bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  z-index: 999;
-}
+.toast-container { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; gap: 10px; z-index: 999; }
 .toast {
-  padding: 14px 22px;
-  background: var(--card);
-  border: 1px solid var(--card-border);
-  backdrop-filter: blur(20px);
-  border-radius: 14px;
-  box-shadow: var(--shadow);
-  color: var(--text);
-  font-weight: 600;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  animation: toastIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  min-width: 260px;
+  padding: 14px 22px; background: var(--card); border: 1px solid var(--card-border);
+  backdrop-filter: blur(20px); border-radius: 14px; box-shadow: var(--shadow);
+  color: var(--text); font-weight: 600; font-size: 14px;
+  display: flex; align-items: center; gap: 10px;
+  animation: toastIn .4s cubic-bezier(.34,1.56,.64,1); min-width: 260px;
 }
-.toast.success { border-color: var(--success); }
-.toast.success i { color: var(--success); }
-.toast.error { border-color: var(--danger); }
-.toast.error i { color: var(--danger); }
-@keyframes toastIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-.toast.out { animation: toastOut 0.3s ease forwards; }
-@keyframes toastOut { to { opacity: 0; transform: translateY(30px); } }
-
+.toast.success { border-color: var(--success); } .toast.success i { color: var(--success); }
+.toast.error { border-color: var(--danger); } .toast.error i { color: var(--danger); }
+@keyframes toastIn { from { opacity: 0; transform: translateY(30px);} to { opacity: 1; transform: translateY(0);} }
+.toast.out { animation: toastOut .3s ease forwards; }
+@keyframes toastOut { to { opacity: 0; transform: translateY(30px);} }
 .hidden { display: none !important; }
 @media (max-width: 600px) {
   .topbar { padding: 14px 16px; flex-wrap: wrap; gap: 10px; }
@@ -420,13 +189,11 @@ body::after {
   <i class="fas fa-moon" id="themeIcon"></i>
 </button>
 
-<!-- ===== Login ===== -->
 <div id="loginSection" class="login-wrap">
   <div class="login-card">
     <div class="login-logo"><i class="fas fa-crown"></i></div>
     <h2>ورود مدیر</h2>
     <p class="sub">دسترسی محدود به مدیر سیستم</p>
-
     <div class="field">
       <label>نام کاربری</label>
       <div class="input-wrap">
@@ -445,7 +212,6 @@ body::after {
   </div>
 </div>
 
-<!-- ===== Panel ===== -->
 <div id="panelSection" class="panel-wrap hidden">
   <div class="topbar">
     <div class="user-info">
@@ -467,26 +233,13 @@ body::after {
     <div class="card-box">
       <h3><i class="fas fa-user-plus"></i> افزودن کاربر جدید</h3>
       <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px;">
-        <div class="field" style="margin:0;">
-          <label>نام کامل</label>
-          <div class="input-wrap"><input type="text" id="newUserName" placeholder="مثلاً علی رضایی"><i class="fas fa-user"></i></div>
-        </div>
-        <div class="field" style="margin:0;">
-          <label>شماره تماس</label>
-          <div class="input-wrap"><input type="text" id="newUserPhone" placeholder="اختیاری"><i class="fas fa-phone"></i></div>
-        </div>
-        <div class="field" style="margin:0;">
-          <label>نام کاربری</label>
-          <div class="input-wrap"><input type="text" id="newUserUsername" placeholder="یکتا"><i class="fas fa-at"></i></div>
-        </div>
-        <div class="field" style="margin:0;">
-          <label>رمز عبور</label>
-          <div class="input-wrap"><input type="password" id="newUserPass" placeholder="رمز"><i class="fas fa-lock"></i></div>
-        </div>
+        <div class="field" style="margin:0;"><label>نام کامل</label><div class="input-wrap"><input type="text" id="newUserName" placeholder="مثلاً علی رضایی"><i class="fas fa-user"></i></div></div>
+        <div class="field" style="margin:0;"><label>شماره تماس</label><div class="input-wrap"><input type="text" id="newUserPhone" placeholder="اختیاری"><i class="fas fa-phone"></i></div></div>
+        <div class="field" style="margin:0;"><label>نام کاربری</label><div class="input-wrap"><input type="text" id="newUserUsername" placeholder="یکتا"><i class="fas fa-at"></i></div></div>
+        <div class="field" style="margin:0;"><label>رمز عبور</label><div class="input-wrap"><input type="password" id="newUserPass" placeholder="رمز"><i class="fas fa-lock"></i></div></div>
       </div>
       <button class="btn" style="margin-top:14px;" onclick="addUser()"><i class="fas fa-plus"></i> افزودن کاربر</button>
     </div>
-
     <div class="card-box">
       <h3><i class="fas fa-users"></i> لیست کاربران</h3>
       <div id="usersList"></div>
@@ -502,7 +255,6 @@ body::after {
         <button class="btn sm danger" onclick="deleteCurrentUser()"><i class="fas fa-trash"></i> حذف</button>
       </div>
     </div>
-
     <div class="card-box">
       <h3><i class="fas fa-hashtag"></i> انتخاب شماره پرونده</h3>
       <div class="field" style="margin:0;">
@@ -514,7 +266,6 @@ body::after {
         </div>
       </div>
     </div>
-
     <div id="caseContent"></div>
   </div>
 </div>
@@ -522,24 +273,40 @@ body::after {
 <div class="toast-container" id="toastContainer"></div>
 <div id="modalContainer"></div>
 
-<script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, getDocs, query, where, addDoc, doc, updateDoc, deleteDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getStorage, ref, deleteObject } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
+
 /* ============================================================
-   ⚙️ نام کاربری و رمز ادمین — همین‌جا عوض کنید
+   ⚙️ تنظیمات — این‌ها را عوض کنید
    ============================================================ */
+const firebaseConfig = {
+  apiKey: "AIzaSyAZGDFqDPvbrejhmBLdIoVmLuGh2yR0Jcs",
+  authDomain: "file-panel-1a60a.firebaseapp.com",
+  projectId: "file-panel-1a60a",
+  storageBucket: "file-panel-1a60a.firebasestorage.app",
+  messagingSenderId: "408149922852",
+  appId: "1:408149922852:web:c238cc80fa9c1203c174b1"
+};
+
 const ADMIN_USERNAME = "admin";
 const ADMIN_PASSWORD = "1234";
 /* ============================================================ */
 
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const storage = getStorage(app);
 let currentUserId = null;
 
 /* ===== Theme ===== */
-function toggleTheme() {
+window.toggleTheme = function() {
   const html = document.documentElement;
   const isLight = html.getAttribute('data-theme') === 'light';
   html.setAttribute('data-theme', isLight ? 'dark' : 'light');
   document.getElementById('themeIcon').className = isLight ? 'fas fa-moon' : 'fas fa-sun';
   localStorage.setItem('theme', isLight ? 'dark' : 'light');
-}
+};
 (function initTheme() {
   const t = localStorage.getItem('theme') || 'dark';
   document.documentElement.setAttribute('data-theme', t);
@@ -571,33 +338,16 @@ function openModal(title, bodyHTML, onConfirm) {
       </div>
     </div>
   `;
-  document.getElementById('modalConfirm').onclick = () => {
-    if (onConfirm() !== false) closeModal();
-  };
+  document.getElementById('modalConfirm').onclick = () => { if (onConfirm() !== false) closeModal(); };
   setTimeout(() => c.querySelector('input, textarea')?.focus(), 100);
 }
-function closeModal() { document.getElementById('modalContainer').innerHTML = ''; }
-
-/* ===== DB ===== */
-function openDB() {
-  return new Promise((res, rej) => {
-    const req = indexedDB.open('fileDB', 2);
-    req.onupgradeneeded = e => {
-      const db = e.target.result;
-      if (!db.objectStoreNames.contains('users')) db.createObjectStore('users', { keyPath: 'id', autoIncrement: true });
-      if (!db.objectStoreNames.contains('files')) db.createObjectStore('files', { keyPath: 'id', autoIncrement: true });
-    };
-    req.onsuccess = e => res(e.target.result);
-    req.onerror = e => rej(e.target.error);
-  });
-}
+window.closeModal = () => { document.getElementById('modalContainer').innerHTML = ''; };
 
 /* ===== Login ===== */
-function adminLogin() {
+window.adminLogin = function() {
   const u = document.getElementById('adminUser').value.trim();
   const p = document.getElementById('adminPass').value;
   if (!u || !p) { toast('نام کاربری و رمز را وارد کنید', 'error'); return; }
-
   if (u === ADMIN_USERNAME && p === ADMIN_PASSWORD) {
     sessionStorage.setItem('adminLoggedIn', '1');
     document.getElementById('loginSection').classList.add('hidden');
@@ -609,45 +359,42 @@ function adminLogin() {
   } else {
     toast('نام کاربری یا رمز اشتباه است', 'error');
   }
-}
-function adminLogout() {
+};
+window.adminLogout = function() {
   sessionStorage.removeItem('adminLoggedIn');
   document.getElementById('panelSection').classList.add('hidden');
   document.getElementById('loginSection').classList.remove('hidden');
   currentUserId = null;
-}
+};
 
 /* ===== Tabs ===== */
-function showTab(name) {
+window.showTab = function(name) {
   document.getElementById('tabUsers').classList.toggle('active', name==='users');
   document.getElementById('tabProfile').classList.toggle('active', name==='profile');
   document.getElementById('usersSection').classList.toggle('hidden', name!=='users');
   document.getElementById('profileSection').classList.toggle('hidden', name!=='profile');
-}
+};
 
 /* ===== Users ===== */
 async function loadUsers() {
-  const db = await openDB();
-  const tx = db.transaction(['users','files'], 'readonly');
-  const usersReq = tx.objectStore('users').getAll();
-  const filesReq = tx.objectStore('files').getAll();
-
-  tx.oncomplete = () => {
-    const users = usersReq.result;
-    const files = filesReq.result;
-    const list = document.getElementById('usersList');
+  const list = document.getElementById('usersList');
+  list.innerHTML = '<div class="empty"><i class="fas fa-spinner fa-spin"></i>در حال بارگذاری...</div>';
+  try {
+    const usersSnap = await getDocs(collection(db, 'users'));
+    const filesSnap = await getDocs(collection(db, 'files'));
+    const users = usersSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+    const files = filesSnap.docs.map(d => ({ id: d.id, ...d.data() }));
 
     if (!users.length) {
       list.innerHTML = '<div class="empty"><i class="fas fa-users-slash"></i>هیچ کاربری ثبت نشده است</div>';
       return;
     }
-
     list.innerHTML = users.map(u => {
       const count = files.filter(f => f.userId === u.id).length;
       return `
-        <div class="user-card" onclick="openProfile(${u.id})">
+        <div class="user-card" onclick="openProfile('${u.id}')">
           <div class="user-left">
-            <div class="avatar-sm">${u.name.charAt(0)}</div>
+            <div class="avatar-sm">${(u.name||'?').charAt(0)}</div>
             <div>
               <div class="name">${u.name}</div>
               <div class="meta">
@@ -658,44 +405,44 @@ async function loadUsers() {
             </div>
           </div>
           <div class="actions" onclick="event.stopPropagation()">
-            <button class="btn sm icon-only" onclick="editUser(${u.id})" title="ویرایش"><i class="fas fa-edit"></i></button>
-            <button class="btn sm danger icon-only" onclick="deleteUser(${u.id})" title="حذف"><i class="fas fa-trash"></i></button>
+            <button class="btn sm icon-only" onclick="editUser('${u.id}')" title="ویرایش"><i class="fas fa-edit"></i></button>
+            <button class="btn sm danger icon-only" onclick="deleteUser('${u.id}')" title="حذف"><i class="fas fa-trash"></i></button>
           </div>
         </div>
       `;
     }).join('');
-  };
+  } catch (err) {
+    console.error(err);
+    list.innerHTML = '<div class="empty">خطا در بارگذاری</div>';
+  }
 }
 
-async function addUser() {
+window.addUser = async function() {
   const name = document.getElementById('newUserName').value.trim();
   const phone = document.getElementById('newUserPhone').value.trim();
   const username = document.getElementById('newUserUsername').value.trim();
   const password = document.getElementById('newUserPass').value;
-
   if (!name || !username || !password) { toast('نام، نام کاربری و رمز الزامی است', 'error'); return; }
 
-  const db = await openDB();
-  const checkTx = db.transaction('users', 'readonly');
-  const all = checkTx.objectStore('users').getAll();
-  all.onsuccess = () => {
-    if (all.result.some(u => u.username === username)) { toast('این نام کاربری قبلاً گرفته شده', 'error'); return; }
-    const tx = db.transaction('users', 'readwrite');
-    tx.objectStore('users').add({ name, phone, username, password, date: new Date().toLocaleString('fa-IR') });
-    tx.oncomplete = () => {
-      ['newUserName','newUserPhone','newUserUsername','newUserPass'].forEach(id => document.getElementById(id).value = '');
-      toast('کاربر با موفقیت اضافه شد');
-      loadUsers();
-    };
-  };
-}
+  try {
+    const q = query(collection(db, 'users'), where('username', '==', username));
+    const snap = await getDocs(q);
+    if (!snap.empty) { toast('این نام کاربری قبلاً گرفته شده', 'error'); return; }
 
-async function editUser(id) {
-  const db = await openDB();
-  const tx = db.transaction('users', 'readonly');
-  const req = tx.objectStore('users').get(id);
-  req.onsuccess = () => {
-    const u = req.result;
+    await addDoc(collection(db, 'users'), { name, phone, username, password, date: new Date().toLocaleString('fa-IR'), createdAt: Date.now() });
+    ['newUserName','newUserPhone','newUserUsername','newUserPass'].forEach(id => document.getElementById(id).value = '');
+    toast('کاربر با موفقیت اضافه شد');
+    loadUsers();
+  } catch (err) {
+    console.error(err);
+    toast('خطا: ' + err.message, 'error');
+  }
+};
+
+window.editUser = async function(id) {
+  try {
+    const snap = await getDoc(doc(db, 'users', id));
+    const u = { id: snap.id, ...snap.data() };
     openModal('ویرایش کاربر', `
       <div class="field"><label>نام</label><div class="input-wrap"><input id="eu_name" value="${u.name}" placeholder="نام"><i class="fas fa-user"></i></div></div>
       <div class="field"><label>شماره تماس</label><div class="input-wrap"><input id="eu_phone" value="${u.phone||''}" placeholder="اختیاری"><i class="fas fa-phone"></i></div></div>
@@ -708,49 +455,64 @@ async function editUser(id) {
       const pass = document.getElementById('eu_pass').value;
       if (!name || !username) { toast('نام و نام کاربری الزامی است', 'error'); return false; }
 
-      const db2 = await openDB();
-      const chk = db2.transaction('users','readonly').objectStore('users').getAll();
-      chk.onsuccess = () => {
-        if (chk.result.some(x => x.username === username && x.id !== id)) { toast('این نام کاربری قبلاً گرفته شده', 'error'); return; }
-        const updated = { ...u, name, phone, username };
-        if (pass.trim()) updated.password = pass.trim();
-        const t = db2.transaction('users','readwrite');
-        t.objectStore('users').put(updated);
-        t.oncomplete = () => { toast('ویرایش شد'); loadUsers(); if (currentUserId === id) openProfile(id); };
-      };
-    });
-  };
-}
+      const q = query(collection(db, 'users'), where('username', '==', username));
+      const snap = await getDocs(q);
+      if (snap.docs.some(d => d.id !== id)) { toast('این نام کاربری قبلاً گرفته شده', 'error'); return false; }
 
-async function deleteUser(id) {
+      const updated = { name, phone, username };
+      if (pass.trim()) updated.password = pass.trim();
+      await updateDoc(doc(db, 'users', id), updated);
+      toast('ویرایش شد');
+      loadUsers();
+      if (currentUserId === id) openProfile(id);
+    });
+  } catch (err) {
+    console.error(err);
+    toast('خطا: ' + err.message, 'error');
+  }
+};
+
+window.deleteUser = async function(id) {
   openModal('حذف کاربر', '<p style="color:var(--text-muted);">آیا از حذف این کاربر و همه فایل‌هایش مطمئن هستید؟ این عمل قابل بازگشت نیست.</p>', async () => {
-    const db = await openDB();
-    const tx = db.transaction(['users','files'], 'readwrite');
-    tx.objectStore('users').delete(id);
-    const filesReq = tx.objectStore('files').getAll();
-    filesReq.onsuccess = () => {
-      filesReq.result.filter(f => f.userId === id).forEach(f => tx.objectStore('files').delete(f.id));
-    };
-    tx.oncomplete = () => {
+    try {
+      // حذف فایل‌ها
+      const filesSnap = await getDocs(collection(db, 'files'));
+      const toDelete = filesSnap.docs.filter(d => d.data().userId === id);
+      for (const d of toDelete) {
+        try {
+          const f = d.data();
+          if (f.fileURL) {
+            // حذف از storage با مسیر ذخیره‌شده
+            try {
+              const url = new URL(f.fileURL);
+              const pathEncoded = decodeURIComponent(url.pathname.split('/o/')[1].split('?')[0]);
+              await deleteObject(ref(storage, pathEncoded));
+            } catch(e) { console.warn('storage delete:', e); }
+          }
+          await deleteDoc(doc(db, 'files', d.id));
+        } catch(e) { console.warn(e); }
+      }
+      await deleteDoc(doc(db, 'users', id));
       if (currentUserId === id) { currentUserId = null; showTab('users'); }
       toast('کاربر حذف شد');
       loadUsers();
-    };
+    } catch (err) {
+      console.error(err);
+      toast('خطا: ' + err.message, 'error');
+    }
   });
-}
+};
 
 /* ===== Profile ===== */
-async function openProfile(id) {
+window.openProfile = async function(id) {
   currentUserId = id;
   showTab('profile');
-  const db = await openDB();
-  const tx = db.transaction(['users','files'], 'readonly');
-  const userReq = tx.objectStore('users').get(id);
-  const filesReq = tx.objectStore('files').getAll();
+  try {
+    const userSnap = await getDoc(doc(db, 'users', id));
+    const user = { id: userSnap.id, ...userSnap.data() };
+    const filesSnap = await getDocs(collection(db, 'files'));
+    const files = filesSnap.docs.map(d => ({ id: d.id, ...d.data() })).filter(f => f.userId === id);
 
-  tx.oncomplete = () => {
-    const user = userReq.result;
-    const files = filesReq.result.filter(f => f.userId === id);
     document.getElementById('profileName').textContent = user.name;
     document.getElementById('profileInfo').innerHTML =
       `<i class="fas fa-at"></i> ${user.username || '-'}` +
@@ -764,21 +526,24 @@ async function openProfile(id) {
     else sel.innerHTML = '<option value="">-- انتخاب کنید --</option>' +
       cases.map(c => `<option value="${c}">شماره پرونده ${c}</option>`).join('');
     document.getElementById('caseContent').innerHTML = '<div class="card-box"><div class="empty"><i class="fas fa-hand-pointer"></i>یک شماره پرونده را انتخاب کنید</div></div>';
-  };
-}
+  } catch (err) {
+    console.error(err);
+    toast('خطا: ' + err.message, 'error');
+  }
+};
 
-async function renderCaseFiles() {
+window.renderCaseFiles = async function() {
   if (!currentUserId) return;
   const caseNo = document.getElementById('caseSelect').value;
   const content = document.getElementById('caseContent');
   if (!caseNo) { content.innerHTML = '<div class="card-box"><div class="empty"><i class="fas fa-hand-pointer"></i>یک شماره پرونده را انتخاب کنید</div></div>'; return; }
 
-  const db = await openDB();
-  const tx = db.transaction('files', 'readonly');
-  const req = tx.objectStore('files').getAll();
+  content.innerHTML = '<div class="card-box"><div class="empty"><i class="fas fa-spinner fa-spin"></i>در حال بارگذاری...</div></div>';
+  try {
+    const filesSnap = await getDocs(collection(db, 'files'));
+    const files = filesSnap.docs.map(d => ({ id: d.id, ...d.data() }))
+      .filter(f => f.userId === currentUserId && String(f.caseNumber) === caseNo);
 
-  req.onsuccess = () => {
-    const files = req.result.filter(f => f.userId === currentUserId && String(f.caseNumber) === caseNo);
     const byType = {};
     files.forEach(f => { if (!byType[f.type]) byType[f.type] = []; byType[f.type].push(f); });
 
@@ -786,13 +551,9 @@ async function renderCaseFiles() {
     if (!files.length) html = '<div class="card-box"><div class="empty">فایلی برای این پرونده نیست</div></div>';
 
     const icons = {
-      'باهم‌های اینویس': 'fa-box-open',
-      'پکینگ': 'fa-boxes-stacked',
-      'سمیر': 'fa-clipboard-list',
-      'اینویس جایگزین': 'fa-file-invoice',
-      'پکینگ جایگزین': 'fa-box'
+      'باهم‌های اینویس': 'fa-box-open', 'پکینگ': 'fa-boxes-stacked',
+      'سمیر': 'fa-clipboard-list', 'اینویس جایگزین': 'fa-file-invoice', 'پکینگ جایگزین': 'fa-box'
     };
-
     Object.keys(byType).forEach(type => {
       html += `<div class="card-box"><h3><i class="fas ${icons[type]||'fa-file'}"></i> ${type}</h3>`;
       byType[type].forEach(f => {
@@ -801,7 +562,7 @@ async function renderCaseFiles() {
             <div class="file-name">${f.fileName}</div>
             <div class="file-meta">${(f.fileSize/1024).toFixed(1)} KB — ${f.date}</div>
           </div>
-          <a href="#" data-id="${f.id}" class="dl" title="دانلود"><i class="fas fa-download"></i></a>
+          <a href="${f.fileURL}" target="_blank" download="${f.fileName}" title="دانلود"><i class="fas fa-download"></i></a>
         </div>`;
       });
       html += `</div>`;
@@ -813,31 +574,15 @@ async function renderCaseFiles() {
       descs.forEach(d => html += `<div class="desc-item">${d}</div>`);
       html += `</div>`;
     }
-
     content.innerHTML = html;
+  } catch (err) {
+    console.error(err);
+    toast('خطا: ' + err.message, 'error');
+  }
+};
 
-    document.querySelectorAll('.dl').forEach(a => {
-      a.onclick = async e => {
-        e.preventDefault();
-        const id = Number(a.dataset.id);
-        const db2 = await openDB();
-        const tx2 = db2.transaction('files', 'readonly');
-        const r = tx2.objectStore('files').get(id);
-        r.onsuccess = () => {
-          const f = r.result;
-          const url = URL.createObjectURL(f.fileBlob);
-          const l = document.createElement('a');
-          l.href = url; l.download = f.fileName; l.click();
-          URL.revokeObjectURL(url);
-          toast('دانلود شروع شد');
-        };
-      };
-    });
-  };
-}
-
-async function editCurrentUser() { if (currentUserId) editUser(currentUserId); }
-async function deleteCurrentUser() { if (currentUserId) deleteUser(currentUserId); }
+window.editCurrentUser = () => { if (currentUserId) editUser(currentUserId); };
+window.deleteCurrentUser = () => { if (currentUserId) deleteUser(currentUserId); };
 
 /* ===== Auto-login ===== */
 if (sessionStorage.getItem('adminLoggedIn') === '1') {
