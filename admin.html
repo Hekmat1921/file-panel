@@ -276,7 +276,6 @@ body::after { bottom: -30%; left: -10%; width: 500px; height: 500px; background:
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, collection, getDocs, query, where, addDoc, doc, updateDoc, deleteDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import { getStorage, ref, deleteObject } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
 
 /* ============================================================
    ⚙️ تنظیمات — این‌ها را عوض کنید
@@ -296,7 +295,6 @@ const ADMIN_PASSWORD = "1234";
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const storage = getStorage(app);
 let currentUserId = null;
 
 /* ===== Theme ===== */
@@ -475,22 +473,10 @@ window.editUser = async function(id) {
 window.deleteUser = async function(id) {
   openModal('حذف کاربر', '<p style="color:var(--text-muted);">آیا از حذف این کاربر و همه فایل‌هایش مطمئن هستید؟ این عمل قابل بازگشت نیست.</p>', async () => {
     try {
-      // حذف فایل‌ها
       const filesSnap = await getDocs(collection(db, 'files'));
       const toDelete = filesSnap.docs.filter(d => d.data().userId === id);
       for (const d of toDelete) {
-        try {
-          const f = d.data();
-          if (f.fileURL) {
-            // حذف از storage با مسیر ذخیره‌شده
-            try {
-              const url = new URL(f.fileURL);
-              const pathEncoded = decodeURIComponent(url.pathname.split('/o/')[1].split('?')[0]);
-              await deleteObject(ref(storage, pathEncoded));
-            } catch(e) { console.warn('storage delete:', e); }
-          }
-          await deleteDoc(doc(db, 'files', d.id));
-        } catch(e) { console.warn(e); }
+        await deleteDoc(doc(db, 'files', d.id));
       }
       await deleteDoc(doc(db, 'users', id));
       if (currentUserId === id) { currentUserId = null; showTab('users'); }
