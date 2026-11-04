@@ -333,14 +333,20 @@ window.logout = function() {
 document.querySelectorAll('.file-card').forEach(card => {
   const input = card.querySelector('input[type=file]');
   const nameEl = card.querySelector('.file-name');
+  
   card.addEventListener('click', e => { if (e.target.tagName !== 'INPUT') input.click(); });
+  
   input.addEventListener('change', () => {
     const files = [...input.files];
-    document.querySelectorAll('.file-card').forEach(c => c.classList.remove('active'));
-    card.classList.add('active');
-    selectedFiles = files;
-    nameEl.textContent = files.length ? `✅ ${files.length} فایل انتخاب شد` : '';
+    if (files.length > 0) {
+      card.classList.add('active');
+      nameEl.textContent = `✅ ${files.length} فایل انتخاب شد`;
+    } else {
+      card.classList.remove('active');
+      nameEl.textContent = '';
+    }
   });
+
   card.addEventListener('dragover', e => { e.preventDefault(); card.style.borderColor = 'var(--success)'; });
   card.addEventListener('dragleave', () => { card.style.borderColor = ''; });
   card.addEventListener('drop', e => {
@@ -357,64 +363,80 @@ window.sendAll = async function() {
   const caseNo = document.getElementById('caseNumber').value.trim();
   const desc = document.getElementById('desc').value.trim();
   const receiverInfo = document.getElementById('receiverInfo').value.trim();
-  const activeCard = document.querySelector('.file-card.active');
 
   if (!receiverInfo) { toast('اطلاعات گیرنده را وارد کنید!', 'error'); return; }
   if (!caseNo) { toast('شماره پرونده را وارد کنید!', 'error'); return; }
-  if (!activeCard || !selectedFiles.length) { toast('ابتدا یک کارت و فایل انتخاب کنید!', 'error'); return; }
+
+  // پیدا کردن تمام کارت‌هایی که فایل دارند
+  let allTasks = [];
+  document.querySelectorAll('.file-card').forEach(card => {
+    const files = card.querySelector('input[type=file]').files;
+    if (files.length > 0) {
+      allTasks.push({ type: card.dataset.type, files: [...files], card: card });
+    }
+  });
+
+  if (!allTasks.length) { toast('حداقل یک فایل انتخاب کنید!', 'error'); return; }
+
+  // محاسبه تعداد کل فایل‌ها برای نمایش درصد
+  const totalFiles = allTasks.reduce((sum, task) => sum + task.files.length, 0);
+  let uploadedCount = 0;
 
   const btn = document.getElementById('sendBtn');
   btn.disabled = true;
   btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> در حال ارسال...';
 
   try {
-    const type = activeCard.dataset.type;
-    let successCount = 0;
+    for (const task of allTasks) {
+      for (const file of task.files) {
+        btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> آپلود ${uploadedCount + 1} از ${totalFiles}...`;
+        
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+        formData.append('folder', `panel/${loggedUser.id}`);
 
-    for (const file of selectedFiles) {
-      btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> آپلود ${successCount + 1} از ${selectedFiles.length}...`;
-      
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
-      formData.append('folder', `panel/${loggedUser.id}`);
+        const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/auto/upload`, {
+          method: 'POST',
+          body: formData
+        });
 
-      const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/auto/upload`, {
-        method: 'POST',
-        body: formData
-      });
+        if (!response.ok) {
+          const errData = await response.json();
+          throw new Error(errData.error?.message || 'خطا در آپلود به Cloudinary');
+        }
 
-      if (!response.ok) {
-        const errData = await response.json();
-        throw new Error(errData.error?.message || 'خطا در آپلود به Cloudinary');
+        const data = await response.json();
+        
+        const fileId = Date.now() + '_' + Math.random().toString(36).slice(2,8);
+        await setDoc(doc(db, 'files', fileId), {
+          userId: loggedUser.id,
+          caseNumber: Number(caseNo),
+          type: task.type,
+          fileName: file.name,
+          fileSize: file.size,
+          fileURL: data.secure_url,
+          publicId: data.public_id,
+          description: desc,
+          receiverInfo: receiverInfo,
+          date: new Date().toLocaleString('fa-IR'),
+          createdAt: Date.now()
+        });
+        uploadedCount++;
       }
-
-      const data = await response.json();
-      
-      const fileId = Date.now() + '_' + Math.random().toString(36).slice(2,8);
-      await setDoc(doc(db, 'files', fileId), {
-        userId: loggedUser.id,
-        caseNumber: Number(caseNo),
-        type,
-        fileName: file.name,
-        fileSize: file.size,
-        fileURL: data.secure_url,
-        publicId: data.public_id,
-        description: desc,
-        receiverInfo: receiverInfo,
-        date: new Date().toLocaleString('fa-IR'),
-        createdAt: Date.now()
-      });
-      successCount++;
     }
 
-    toast(`✅ ${successCount} فایل با شماره پرونده ${caseNo} ارسال شد`, 'success');
-    selectedFiles = [];
-    activeCard.classList.remove('active');
-    activeCard.querySelector('.file-name').textContent = '';
-    activeCard.querySelector('input[type=file]').value = '';
+    toast(`✅ ${uploadedCount} فایل با موفقیت ارسال شد`, 'success');
+    
+    // پاک کردن فرم و کارت‌ها بعد از ارسال موفق
+    document.querySelectorAll('.file-card').forEach(card => {
+      card.classList.remove('active');
+      card.querySelector('.file-name').textContent = '';
+      card.querySelector('input[type=file]').value = '';
+    });
     document.getElementById('desc').value = '';
     document.getElementById('receiverInfo').value = '';
+
   } catch (err) {
     console.error('SEND ERROR:', err);
     toast('خطا: ' + err.message, 'error');
